@@ -5,21 +5,39 @@ defmodule Day6 do
     {:ok, filename} = parse_args(args)
     {:ok, handle} = File.open(filename, [:read])
 
-    forms = read_forms(handle)
+    {any, all} = read_forms(handle)
 
-    star1 = forms |> Enum.map(&Enum.count/1) |> Enum.sum()
+    star1 = any |> Enum.map(&Enum.count/1) |> Enum.sum()
     IO.puts("Star 1: Sum of form unique lengths is #{star1}")
+    star2 = all |> Enum.map(&Enum.count/1) |> Enum.sum()
+    IO.puts("Star 2: Sum of form unique lengths is #{star2}")
   end
 
   defp parse_args([]), do: {:error, "No filename given!"}
   defp parse_args([filename | _]), do: {:ok, filename}
 
   defp read_forms(handle) do
-    raw_forms = handle |> IO.read(:all) |> String.split("\n\n")
-    for form <- raw_forms do
-      uniques_only_form = form |> String.to_charlist() |> Enum.uniq()
-      uniques_only_form -- '\n'
+    forms =
+      handle
+      |> IO.read(:all)
+      |> String.split("\n\n")
+    IO.inspect(Enum.at(forms, -1))
+
+    unique_answers =
+      forms
+      |> Enum.map(&String.to_charlist/1)
+      |> Enum.map(fn x -> Enum.uniq(x) -- '\n' end)
+
+    common_answers = for form <- forms do
+      form
+      |> String.split("\n")
+      |> Enum.map(&String.to_charlist/1)
+      |> Enum.map(fn x -> Enum.uniq(x) -- '\n' end)
+      |> Enum.reduce(fn x, y -> x -- (x -- y) end)
     end
+    IO.inspect(Enum.at(common_answers, -1))
+
+    {unique_answers, common_answers}
   end
 
 end
