@@ -1,6 +1,6 @@
 #! /usr/bin/env elixir
 
-defmodule Day3 do
+defmodule Day4 do
   def main(args) do
     {:ok, filename} = parse_args(args)
     {:ok, handle} = File.open(filename, [:read])
@@ -116,4 +116,4 @@ defmodule Day3 do
   end
 end
 
-Day3.main(System.argv())
+Day4.main(System.argv())
