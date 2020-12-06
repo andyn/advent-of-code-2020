@@ -4,9 +4,14 @@ defmodule Day5 do
   def main(args) do
     {:ok, filename} = parse_args(args)
     {:ok, handle} = File.open(filename, [:read])
+
     boarding_passes = read_boarding_passes(handle)
+
     star1 = Enum.max(boarding_passes)
     IO.puts("Star 1: Highest seat ID is #{star1}")
+
+    star2 = find_missing_seat(boarding_passes)
+    IO.puts("Star 2: The missing (your) seat ID is #{star2}")
   end
 
   defp parse_args([]), do: {:error, "No filename given!"}
@@ -49,6 +54,16 @@ defmodule Day5 do
       ?R -> parse_colstring(tail, min + div(max - min, 2), max)
     end
   end
+
+  def find_missing_seat(boarding_passes, sorted \\ :false)
+  def find_missing_seat(boarding_passes, :false), do: find_missing_seat(Enum.sort(boarding_passes), :true)
+  def find_missing_seat([current | tail = [next | _]], :true) do
+    case next - current do
+      2 -> next - 1
+      _ -> find_missing_seat(tail, :true)
+    end
+  end
+  def find_missing_seat(_, _), do: "not found"  # To allow example.txt to pass through
 
 end
 
