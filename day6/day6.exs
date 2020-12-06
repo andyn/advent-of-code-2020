@@ -21,7 +21,6 @@ defmodule Day6 do
       handle
       |> IO.read(:all)
       |> String.split("\n\n")
-    IO.inspect(Enum.at(forms, -1))
 
     unique_answers =
       forms
@@ -35,7 +34,6 @@ defmodule Day6 do
       |> Enum.map(fn x -> Enum.uniq(x) -- '\n' end)
       |> Enum.reduce(fn x, y -> x -- (x -- y) end)
     end
-    IO.inspect(Enum.at(common_answers, -1))
 
     {unique_answers, common_answers}
   end
